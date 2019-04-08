@@ -12,7 +12,6 @@ namespace Sanchescom\Utility;
  * @method static getMacAddress($hardwarePortOrDeviceName) Display ethernet (or WiFi) address for hardwareport or device specified.
  * @method static getComputerName() Display the computer name.
  * @method static setComputerName(string $name) Set the computer's name (if valid) to $name.
- * @method static getInfo(string $networkService) Display IPv4 address, IPv6 address, subnet mask, router address, ethernet address for $networkService.
  * @method static setManual(string $networkService, string $ip, string $subnet, string $router) Set the $networkService TCP/IP configuration to manual with IP address set to ip, Subnet Mask set to subnet, and Router address set to router.
  * @method static setDHCP(string $networkService, string $clientId = null) Set the $networkService TCP/IP configuration to DHCP. You can set the DHCP client id to the optional $clientId. Specify "Empty" for [clientid] to clear the DHCP client id.
  * @method static setBOOTP(string $networkService) Set the $networkService TCP/IP configuration to BOOTP.
@@ -122,22 +121,83 @@ namespace Sanchescom\Utility;
  * @method static deleteLoginProfile(string $serviceName, string $profileName) Deletes the specified loginwindow profile for the specified service.
  * @method static deleteUserProfile(string $profileName) Deletes the specified user profile.
  * @method static version() Display version of networksetup tool.
- * @method static help() Display these help listings.
  * @method static printCommands() Displays a quick listing of commands (without explanations).
  */
-class NetworkSetup //implements Executable
+class NetworkSetup
 {
-    public static function __callStatic($name, $arguments)
+    /**
+     * @var string System utility name
+     */
+    protected static $utility = 'networksetup';
+
+    /**
+     * @var string networksetup command prefix
+     */
+    protected static $commandPrefix = '-';
+
+    /**
+     * Display IPv4 address, IPv6 address, subnet mask, router address,
+     * ethernet address for $networkService.
+     *
+     * @param string $networkService
+     *
+     * @return string
+     */
+    public static function getInfo(string $networkService)
     {
-//        return new Command('networksetup -' . strtolower($name));
+        return Command::make(
+            self::getUtility(),
+            self::getCommandPrefix(),
+            __FUNCTION__,
+            [
+                'networkservice' => $networkService,
+            ]
+        );
+    }
+
+    /**
+     * Displays a list of the current wireless interfaces on a computer.
+     *
+     * @return Command
+     */
+    public static function showInterfaces()
+    {
+        return Command::make(
+            self::getUtility(),
+            self::getCommandPrefix(),
+            __FUNCTION__
+        );
+    }
+
+    /**
+     * Display these help listings.
+     */
+    public static function help()
+    {
+        return Command::make(
+            self::getUtility(),
+            self::getCommandPrefix(),
+            __FUNCTION__
+        );
+    }
+
+    /**
+     * @return Utility
+     */
+    public static function getUtility()
+    {
+        return new Utility();
+    }
+
+    /**
+     * @return string
+     */
+    public static function getCommandPrefix()
+    {
+        return self::$commandPrefix;
     }
 }
-//
-//(new Execute())->command(NetworkSetup::printCommands());
-//(new Execute())->batch(
-//    NetworkSetup::version(),
-//    NetworkSetup::help()
-//);
-//
-//echo NetworkSetup::printCommands();
-//echo NetworkSetup::help();
+
+
+NetworkSetup::printCommands();
+NetworkSetup::help();
