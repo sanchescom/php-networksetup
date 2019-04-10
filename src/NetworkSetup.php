@@ -5,7 +5,6 @@ namespace Sanchescom\Utility;
 /**
  * Class NetworkSetup.
  *
- * @method static listAllHardwarePorts() Display list of hardware ports with corresponding device name and ethernet address.
  * @method static detectNewHardware() Detect new network hardware and create a default network service on the hardware.
  * @method static getMacAddress($hardwarePortOrDeviceName) Display ethernet (or WiFi) address for hardwareport or device specified.
  * @method static getComputerName() Display the computer name.
@@ -124,11 +123,6 @@ namespace Sanchescom\Utility;
 class NetworkSetup
 {
     /**
-     * @var string networksetup command prefix
-     */
-    protected static $commandPrefix = '-';
-
-    /**
      * Display services with corresponding port and device in order they are
      * tried for connecting to a network. An asterisk (*) denotes that a service
      * is disabled.
@@ -137,7 +131,7 @@ class NetworkSetup
      */
     public static function listNetworkServiceOrder()
     {
-        return self::makeCommand(__FUNCTION__);
+        return Command::make(__FUNCTION__);
     }
 
     /**
@@ -145,7 +139,15 @@ class NetworkSetup
      */
     public static function listAllNetworkServices()
     {
-        return self::makeCommand(__FUNCTION__);
+        return Command::make(__FUNCTION__);
+    }
+
+    /**
+     * Display list of hardware ports with corresponding device name and ethernet address.
+     */
+    public static function listAllHardwarePorts()
+    {
+        return Command::make(__FUNCTION__);
     }
 
     /**
@@ -158,7 +160,7 @@ class NetworkSetup
      */
     public static function getInfo(string $networkService)
     {
-        return self::makeCommand(__FUNCTION__, [$networkService]);
+        return Command::make(__FUNCTION__, [$networkService]);
     }
 
     /**
@@ -168,11 +170,7 @@ class NetworkSetup
      */
     public static function showInterfaces()
     {
-        return Command::make(
-            self::getUtility(),
-            self::getCommandPrefix(),
-            __FUNCTION__
-        );
+        return Command::make(__FUNCTION__);
     }
 
     /**
@@ -180,37 +178,6 @@ class NetworkSetup
      */
     public static function help()
     {
-        return Command::make(
-            self::getUtility(),
-            self::getCommandPrefix(),
-            __FUNCTION__
-        );
-    }
-
-    /**
-     * @param string $command
-     * @param array $options
-     *
-     * @return Command
-     */
-    protected static function makeCommand(string $command, array $options = [])
-    {
-        return Command::make(self::getUtility(), self::getCommandPrefix(), $command, $options);
-    }
-
-    /**
-     * @return Utility
-     */
-    protected static function getUtility()
-    {
-        return new Utility();
-    }
-
-    /**
-     * @return string
-     */
-    protected static function getCommandPrefix()
-    {
-        return self::$commandPrefix;
+        return Command::make(__FUNCTION__);
     }
 }

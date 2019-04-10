@@ -2,21 +2,19 @@
 
 namespace Sanchescom\Utility;
 
-use Sanchescom\Utility\Contracts\UtilityInterface;
-
 /**
  * Class Command.
  */
 class Command
 {
-    /** @var UtilityInterface */
-    private $utility;
-
-    /**  @var string */
-    private $commandPrefix;
+    /** @var string */
+    private const UTILITY = 'networksetup';
 
     /** @var string */
-    private $command;
+    private const COMMAND_PREFIX = '-';
+
+    /** @var string */
+    private $method;
 
     /** @var array */
     private $options;
@@ -24,38 +22,32 @@ class Command
     /**
      * Command constructor.
      *
-     * @param UtilityInterface $utility
-     * @param string $commandPrefix
-     * @param string $command
+     * @param string $method
      * @param array $options
      */
-    public function __construct(UtilityInterface $utility, string $commandPrefix, string $command, array $options = [])
+    protected function __construct(string $method, array $options = [])
     {
-        $this->utility = $utility;
-        $this->commandPrefix = $commandPrefix;
-        $this->command = $command;
+        $this->method = $method;
         $this->options = $options;
     }
 
     /**
-     * @param UtilityInterface $utility
-     * @param string $commandPrefix
-     * @param string $command
+     * @param string $method
      * @param array $options
      *
      * @return Command
      */
-    public static function make(UtilityInterface $utility, string $commandPrefix, string $command, array $options = [])
+    public static function make(string $method, array $options = [])
     {
-        return new self($utility, $commandPrefix, $command, $options);
+        return new self($method, $options);
     }
 
     /**
-     * @return UtilityInterface
+     * @return string
      */
     public function getUtility()
     {
-        return $this->utility;
+        return self::UTILITY;
     }
 
     /**
@@ -67,29 +59,37 @@ class Command
     }
 
     /**
-     * @return string
+     * @return array
      */
-    protected function implodeCommand()
+    public function getOptions()
     {
-        return $this->commandPrefix.strtolower($this->command);
+        return $this->implodeOptions();
     }
 
     /**
      * @return string
      */
+    protected function implodeCommand()
+    {
+        return self::COMMAND_PREFIX.strtolower($this->method);
+    }
+
+    /**
+     * @return array
+     */
     protected function implodeOptions()
     {
-        $options = '';
+        $options = [];
 
         foreach ($this->options as $option) {
             if (is_array($option)) {
-                $options .= implode(' ', $option).' ';
+                $options[] = implode(' ', $option);
             } else {
-                $options .= $option.' ';
+                $options[] = $option;
             }
         }
 
-        return trim($options);
+        return $options;
     }
 
     /**
