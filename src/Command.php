@@ -9,25 +9,17 @@ use Sanchescom\Utility\Contracts\UtilityInterface;
  */
 class Command
 {
-    /**
-     * @var UtilityInterface
-     */
-    protected $utility;
+    /** @var UtilityInterface */
+    private $utility;
 
-    /**
-     * @var string
-     */
-    protected $commandPrefix;
+    /**  @var string */
+    private $commandPrefix;
 
-    /**
-     * @var string
-     */
-    protected $command;
+    /** @var string */
+    private $command;
 
-    /**
-     * @var array
-     */
-    protected $options;
+    /** @var array */
+    private $options;
 
     /**
      * Command constructor.
@@ -50,6 +42,7 @@ class Command
      * @param string $commandPrefix
      * @param string $command
      * @param array $options
+     *
      * @return Command
      */
     public static function make(UtilityInterface $utility, string $commandPrefix, string $command, array $options = [])
@@ -58,27 +51,19 @@ class Command
     }
 
     /**
-     * @return string
+     * @return UtilityInterface
      */
-    protected function extractCommand()
+    public function getUtility()
     {
-        return $this->commandPrefix.strtolower($this->command);
+        return $this->utility;
     }
 
     /**
-     * @return array
+     * @return string
      */
-    protected function implodeOptions()
+    public function getCommand()
     {
-        return array_map(
-            function ($value, $option) {
-                if ($value) {
-                    return sprintf("%s='%s'", $option, $value);
-                }
-            },
-            $this->options,
-            array_keys($this->options)
-        );
+        return $this->implodeCommand();
     }
 
     /**
@@ -86,12 +71,25 @@ class Command
      */
     protected function implodeCommand()
     {
-        return trim(
-            implode(' ', array_merge([
-                $this->utility,
-                $this->extractCommand(),
-            ], $this->implodeOptions()))
-        );
+        return $this->commandPrefix.strtolower($this->command);
+    }
+
+    /**
+     * @return string
+     */
+    protected function implodeOptions()
+    {
+        $options = '';
+
+        foreach ($this->options as $option) {
+            if (is_array($option)) {
+                $options .= implode(' ', $option).' ';
+            } else {
+                $options .= $option.' ';
+            }
+        }
+
+        return trim($options);
     }
 
     /**
@@ -99,6 +97,11 @@ class Command
      */
     public function __toString()
     {
-        return $this->implodeCommand();
+        return trim(
+            implode(' ', array_merge([
+                $this->getUtility(),
+                $this->getCommand(),
+            ], $this->implodeOptions()))
+        );
     }
 }

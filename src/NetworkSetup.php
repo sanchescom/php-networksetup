@@ -5,8 +5,6 @@ namespace Sanchescom\Utility;
 /**
  * Class NetworkSetup.
  *
- * @method static listNetworkServiceOrder() Display services with corresponding port and device in order they are tried for connecting to a network. An asterisk (*) denotes that a service is disabled.
- * @method static listAllNetworkServices() Display list of services. An asterisk (*) denotes that a network service is disabled.
  * @method static listAllHardwarePorts() Display list of hardware ports with corresponding device name and ethernet address.
  * @method static detectNewHardware() Detect new network hardware and create a default network service on the hardware.
  * @method static getMacAddress($hardwarePortOrDeviceName) Display ethernet (or WiFi) address for hardwareport or device specified.
@@ -126,14 +124,29 @@ namespace Sanchescom\Utility;
 class NetworkSetup
 {
     /**
-     * @var string System utility name
-     */
-    protected static $utility = 'networksetup';
-
-    /**
      * @var string networksetup command prefix
      */
     protected static $commandPrefix = '-';
+
+    /**
+     * Display services with corresponding port and device in order they are
+     * tried for connecting to a network. An asterisk (*) denotes that a service
+     * is disabled.
+     *
+     * @return Command
+     */
+    public static function listNetworkServiceOrder()
+    {
+        return self::makeCommand(__FUNCTION__);
+    }
+
+    /**
+     * Display list of services. An asterisk (*) denotes that a network service is disabled.
+     */
+    public static function listAllNetworkServices()
+    {
+        return self::makeCommand(__FUNCTION__);
+    }
 
     /**
      * Display IPv4 address, IPv6 address, subnet mask, router address,
@@ -141,18 +154,11 @@ class NetworkSetup
      *
      * @param string $networkService
      *
-     * @return string
+     * @return Command
      */
     public static function getInfo(string $networkService)
     {
-        return Command::make(
-            self::getUtility(),
-            self::getCommandPrefix(),
-            __FUNCTION__,
-            [
-                'networkservice' => $networkService,
-            ]
-        );
+        return self::makeCommand(__FUNCTION__, [$networkService]);
     }
 
     /**
@@ -182,9 +188,20 @@ class NetworkSetup
     }
 
     /**
+     * @param string $command
+     * @param array $options
+     *
+     * @return Command
+     */
+    protected static function makeCommand(string $command, array $options = [])
+    {
+        return Command::make(self::getUtility(), self::getCommandPrefix(), $command, $options);
+    }
+
+    /**
      * @return Utility
      */
-    public static function getUtility()
+    protected static function getUtility()
     {
         return new Utility();
     }
@@ -192,12 +209,8 @@ class NetworkSetup
     /**
      * @return string
      */
-    public static function getCommandPrefix()
+    protected static function getCommandPrefix()
     {
         return self::$commandPrefix;
     }
 }
-
-
-NetworkSetup::printCommands();
-NetworkSetup::help();
