@@ -11,10 +11,10 @@ class Command
     private const UTILITY = 'networksetup';
 
     /** @var string */
-    private const COMMAND_PREFIX = '-';
+    private const ARGUMENT_PREFIX = '-';
 
     /** @var string */
-    private $method;
+    private $argument;
 
     /** @var array */
     private $options;
@@ -22,24 +22,24 @@ class Command
     /**
      * Command constructor.
      *
-     * @param string $method
+     * @param string $argument
      * @param array $options
      */
-    protected function __construct(string $method, array $options = [])
+    protected function __construct(string $argument, array $options = [])
     {
-        $this->method = $method;
+        $this->argument = $argument;
         $this->options = $options;
     }
 
     /**
-     * @param string $method
+     * @param string $argument
      * @param array $options
      *
      * @return Command
      */
-    public static function make(string $method, array $options = [])
+    public static function make(string $argument, array $options = [])
     {
-        return new self($method, $options);
+        return new self($argument, $options);
     }
 
     /**
@@ -53,9 +53,9 @@ class Command
     /**
      * @return string
      */
-    public function getCommand()
+    public function getArgument()
     {
-        return $this->implodeCommand();
+        return $this->implodeArgument();
     }
 
     /**
@@ -69,9 +69,9 @@ class Command
     /**
      * @return string
      */
-    protected function implodeCommand()
+    protected function implodeArgument()
     {
-        return self::COMMAND_PREFIX.strtolower($this->method);
+        return self::ARGUMENT_PREFIX.strtolower($this->argument);
     }
 
     /**
@@ -100,7 +100,7 @@ class Command
         return trim(
             implode(' ', array_merge([
                 $this->getUtility(),
-                $this->getCommand(),
+                $this->getArgument(),
             ], $this->implodeOptions()))
         );
     }
