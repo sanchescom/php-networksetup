@@ -5,11 +5,6 @@ namespace Sanchescom\Utility;
 /**
  * Class NetworkSetup.
  *
- * @method static setManual(string $networkService, string $ip, string $subnet, string $router) Set the $networkService TCP/IP configuration to manual with IP address set to ip, Subnet Mask set to subnet, and Router address set to router.
- * @method static setDHCP(string $networkService, string $clientId = null) Set the $networkService TCP/IP configuration to DHCP. You can set the DHCP client id to the optional $clientId. Specify "Empty" for [clientid] to clear the DHCP client id.
- * @method static setBOOTP(string $networkService) Set the $networkService TCP/IP configuration to BOOTP.
- * @method static setManualWithDHCPRouter(string $networkService, string $ip) Set the $networkService TCP/IP configuration to manual with DHCP router with IP address set to ip.
- * @method static getadditionalroutes(string $networkService) Get additional IPv4 routes associated with $networkService
  * @method static setadditionalroutes(string $networkService) [ <dest> <mask> <gateway> ] Set additional IPv4 routes associated with $networkService by specifying one or more [ <dest> <mask> <gateway> ] tuples. Remove additional routes by specifying no arguments. If <gateway> is "", the route is direct to the interface
  * @method static setv4off(string $networkService) Turn IPv4 off on $networkService.
  * @method static setv6off(string $networkService) Turn IPv6 off on $networkService.
@@ -184,6 +179,73 @@ class NetworkSetup
     public static function setComputerName(string $name)
     {
         return Command::make(__FUNCTION__, [$name]);
+    }
+
+    /**
+     * Set the $networkService TCP/IP configuration to manual with IP address set to ip,
+     * Subnet Mask set to subnet, and Router address set to router.
+     *
+     * @param string $networkService
+     * @param string $ip
+     * @param string $subnet
+     * @param string $router
+     *
+     * @return Command
+     */
+    public static function setManual(string $networkService, string $ip, string $subnet, string $router)
+    {
+        return Command::make(__FUNCTION__, [$networkService, $ip, $subnet, $router]);
+    }
+
+    /**
+     * Set the $networkService TCP/IP configuration to DHCP. You can set the DHCP client id to the optional
+     * $clientId. Specify "Empty" for [clientid] to clear the DHCP client id.
+     *
+     * @param string $networkService
+     * @param string|null $clientId
+     *
+     * @return Command
+     */
+    public static function setDHCP(string $networkService, string $clientId = null)
+    {
+        return Command::make(__FUNCTION__, [$networkService, $clientId]);
+    }
+
+    /**
+     * Set the $networkService TCP/IP configuration to BOOTP.
+     *
+     * @param string $networkService
+     *
+     * @return Command
+     */
+    public static function setBOOTP(string $networkService)
+    {
+        return Command::make(__FUNCTION__, [$networkService]);
+    }
+
+    /**
+     * Set the $networkService TCP/IP configuration to manual with DHCP router with IP address set to ip.
+     *
+     * @param string $networkService
+     * @param string $ip
+     *
+     * @return Command
+     */
+    public static function setManualWithDHCPRouter(string $networkService, string $ip)
+    {
+        return Command::make(__FUNCTION__, [$networkService, $ip]);
+    }
+
+    /**
+     * Get additional IPv4 routes associated with $networkService.
+     *
+     * @param string $networkService
+     *
+     * @return Command
+     */
+    public static function getAdditionalRoutes(string $networkService)
+    {
+        return Command::make(__FUNCTION__, [$networkService]);
     }
 
     /**
