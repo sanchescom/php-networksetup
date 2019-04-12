@@ -5,7 +5,6 @@ namespace Sanchescom\Utility;
 /**
  * Class NetworkSetup.
  *
- * @method static setadditionalroutes(string $networkService) [ <dest> <mask> <gateway> ] Set additional IPv4 routes associated with $networkService by specifying one or more [ <dest> <mask> <gateway> ] tuples. Remove additional routes by specifying no arguments. If <gateway> is "", the route is direct to the interface
  * @method static setv4off(string $networkService) Turn IPv4 off on $networkService.
  * @method static setv6off(string $networkService) Turn IPv6 off on $networkService.
  * @method static setv6automatic(string $networkService) Set the service to get its IPv6 info automatically.
@@ -246,6 +245,21 @@ class NetworkSetup
     public static function getAdditionalRoutes(string $networkService)
     {
         return Command::make(__FUNCTION__, [$networkService]);
+    }
+
+    /**
+     * Set additional IPv4 routes associated with $networkService by specifying one or more
+     * [ $dest, $mask, $gateway ] tuples. Remove additional routes by specifying no arguments.
+     * If <gateway> is "", the route is direct to the interface
+     *
+     * @param string $networkService
+     * @param array $array[][]
+     *
+     * @return Command
+     */
+    public static function setAdditionalRoutes(string $networkService, array $array = [])
+    {
+        return Command::make(__FUNCTION__, [$networkService, $array]);
     }
 
     /**
