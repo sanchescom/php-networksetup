@@ -5,10 +5,6 @@ namespace Sanchescom\Utility;
 /**
  * Class NetworkSetup.
  *
- * @method static detectNewHardware() Detect new network hardware and create a default network service on the hardware.
- * @method static getMacAddress($hardwarePortOrDeviceName) Display ethernet (or WiFi) address for hardwareport or device specified.
- * @method static getComputerName() Display the computer name.
- * @method static setComputerName(string $name) Set the computer's name (if valid) to $name.
  * @method static setManual(string $networkService, string $ip, string $subnet, string $router) Set the $networkService TCP/IP configuration to manual with IP address set to ip, Subnet Mask set to subnet, and Router address set to router.
  * @method static setDHCP(string $networkService, string $clientId = null) Set the $networkService TCP/IP configuration to DHCP. You can set the DHCP client id to the optional $clientId. Specify "Empty" for [clientid] to clear the DHCP client id.
  * @method static setBOOTP(string $networkService) Set the $networkService TCP/IP configuration to BOOTP.
@@ -148,6 +144,46 @@ class NetworkSetup
     public static function listAllHardwarePorts()
     {
         return Command::make(__FUNCTION__);
+    }
+
+    /**
+     * Detect new network hardware and create a default network service on the hardware.
+     */
+    public static function detectNewHardware()
+    {
+        return Command::make(__FUNCTION__);
+    }
+
+    /**
+     * Display ethernet (or WiFi) address for hardwareport or device specified.
+     *
+     * @param $hardwarePortOrDeviceName
+     *
+     * @return Command
+     */
+    public static function getMacAddress($hardwarePortOrDeviceName)
+    {
+        return Command::make(__FUNCTION__, [$hardwarePortOrDeviceName]);
+    }
+
+    /**
+     * Display the computer name.
+     */
+    public static function getComputerName()
+    {
+        return Command::make(__FUNCTION__);
+    }
+
+    /**
+     * Set the computer's name (if valid) to $name.
+     *
+     * @param string $name
+     *
+     * @return Command
+     */
+    public static function setComputerName(string $name)
+    {
+        return Command::make(__FUNCTION__, [$name]);
     }
 
     /**
